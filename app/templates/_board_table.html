@@ -1,0 +1,39 @@
+<table class="board">
+  <thead>
+    <tr>
+      <th>#</th><th>Engineer</th><th>Points</th><th>Tracks</th>
+      <th>To cut</th><th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr class="{{ 'qualified' if r.qualified }}">
+      <td class="rank {{ 'top' if r.rank <= 5 }} num">{{ r.rank }}</td>
+      <td>
+        <div class="who">{{ r.name }}</div>
+        {% if r.gap_to_above and not loop.first %}
+          <div class="gap num">−{{ r.gap_to_above }} to #{{ r.rank - 1 }}</div>
+        {% endif %}
+      </td>
+      <td class="pts num">{{ r.total_points }}</td>
+      <td>
+        <span class="tracks" title="{{ r.tracks_covered }} of 3 tracks">
+          {% for i in range(3) %}
+            <span class="dot {{ 'on' if i < r.tracks_covered }}"></span>
+          {% endfor %}
+        </span>
+      </td>
+      <td class="num">{{ r.points_to_cut if r.points_to_cut else '—' }}</td>
+      <td>
+        {% if r.qualified %}
+          <span class="pill q">QUALIFIED</span>
+        {% else %}
+          <span class="pill cut">{{ r.points_to_cut }} to go</span>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty">No approved entries yet. Be the first on the board.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

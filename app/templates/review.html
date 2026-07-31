@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Review · The Devin Draft{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Human sign-off</p>
+  <h1>Review queue</h1>
+  <p>AI drafts the entry; a lead approves it. Only approved entries reach the board.</p>
+</section>
+<section id="queue">
+  {% for s in submissions %}
+  <div class="card" data-id="{{ s.id }}">
+    <div class="row1">
+      <h3>{{ s.title }}</h3>
+      <span class="pts-badge">{{ s.points }} pts</span>
+    </div>
+    <div class="meta">
+      {{ s.name }} · {{ s.team }} · {{ s.track }}
+      {% if s.impact_measured %} · measured impact{% endif %}
+    </div>
+    <div class="desc">{{ s.description }}</div>
+    {% if s.evidence_url %}<div class="desc"><a class="link" href="{{ s.evidence_url }}" target="_blank" rel="noopener">Evidence ↗</a></div>{% endif %}
+    <div class="actions">
+      <button class="btn" onclick="setStatus({{ s.id }}, 'Approved', this)">Approve</button>
+      <button class="btn ghost" onclick="setStatus({{ s.id }}, 'Rejected', this)">Reject</button>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty">Nothing waiting. The queue is clear.</div>
+  {% endfor %}
+</section>
+{% endblock %}
+{% block scripts %}
+<script>
+async function setStatus(id, status, btn) {
+  btn.disabled = true;
+  const res = await fetch(`/api/submissions/${id}/status`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({status})
+  });
+  if (res.ok) {
+    const card = document.querySelector(`.card[data-id="${id}"]`);
+    card.style.opacity = 0.35;
+    card.querySelector('.actions').innerHTML =
+      `<span class="meta">Marked ${status}. Reload to refresh the board.</span>`;
+  } else {
+    btn.disabled = false;
+  }
+}
+</script>
+{% endblock %}

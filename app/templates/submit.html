@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Log an entry · The Devin Draft{% endblock %}
+{% block content %}
+<div class="chat-shell">
+  <div class="chat-head">
+    <span class="dotmark">◆</span>
+    <h2>The Draft Desk</h2>
+  </div>
+  <div class="chat-log" id="log"></div>
+  <div class="opts" id="opts"></div>
+  <div class="chat-input">
+    <input id="input" type="text" placeholder="Type your answer…" autocomplete="off">
+    <button class="btn" id="send">Send</button>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

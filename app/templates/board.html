@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Draft Board · The Devin Draft{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Live standings</p>
+  <h1>The Draft Board</h1>
+  <p>{{ season.seats_remaining }} of {{ season.seats_total }} seats still open.
+     Qualify at {{ qualifying }} points with all three tracks covered.
+     Ties break alphabetically.</p>
+</section>
+<section>
+  {% include "_board_table.html" %}
+</section>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Season 1 · The Founding Five</p>
+  <h1>Five Devin seats.<br>Earned, not assigned.</h1>
+  <p>Learn AI, ship a POC, and propose where Devin helps your team. Hit {{ qualifying }} points
+     with at least one entry in all three tracks, and you're drafted.</p>
+
+  <div class="scoreboard">
+    <div class="tile seats">
+      <p class="cap">Seats remaining</p>
+      <div class="big num">{{ season.seats_remaining }}</div>
+      <div class="sub">of {{ season.seats_total }} · {{ season.seats_filled }} already drafted</div>
+    </div>
+    <div class="tile days">
+      <p class="cap">Draft closes in</p>
+      <div class="big num">{{ days_left if days_left is not none else '—' }}</div>
+      <div class="sub">{% if season.closes_on %}on {{ season.closes_on }}{% else %}date TBC{% endif %} · then Season 2 opens</div>
+    </div>
+  </div>
+
+  <div class="ministat">
+    <div class="m"><div class="v num">{{ stats.total }}</div><div class="k">Submissions</div></div>
+    <div class="m"><div class="v good num">{{ stats.approved }}</div><div class="k">Approved</div></div>
+    <div class="m"><div class="v warn num">{{ stats.pending }}</div><div class="k">Pending</div></div>
+    <div class="m"><div class="v num">{{ stats.qualified }}</div><div class="k">Qualified</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-head">
+    <h2>Draft board · top of the standings</h2>
+    <a href="{{ url_for('main.board') }}">Full board →</a>
+  </div>
+  {% include "_board_table.html" %}
+
+  {% if rows|length > 1 and not rows[0].qualified %}
+  <div class="nearmiss">
+    <b>{{ rows[0].name }}</b> leads with {{ rows[0].total_points }} pts —
+    still <b>{{ rows[0].points_to_cut }}</b> short of the {{ qualifying }}-point cut.
+    The board is wide open.
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
